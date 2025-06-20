@@ -53,7 +53,6 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 ```
 ## 2. Tạo cấu trúc thư mục cho Odoo
-### 2.1. Tạo các cấu trúc thư mục
 - Tạo thư mục dự án
 ```bash
 mkdir -p ~/odoo-docker
@@ -63,17 +62,6 @@ cd ~/odoo-docker
 - Tạo các thư mục cần thiết khác
 ```bash
 mkdir -p odoo-web-data odoo-db-data nginx/conf.d odoo/addons odoo/etc odoo/custom-addons
-```
-### 2.2. Tạo thư mục session (quan trọng)
-- Thay đổi đối tượng và quyền truy cập của thư mục ```odoo-web-data```
-```bash
-sudo chown -R 101:101 odoo-web-data
-sudo chmod -R 755 odoo-web-data
-```
-- Tạo thư mục session và thay đổi đối tượng truy cập
-```bash
-mkdir -p odoo-web-data/sessions
-sudo chown -R 101:101 odoo-web-data/sessions
 ```
 
 ## 3. Tạo cấu hình Odoo
@@ -96,6 +84,11 @@ longpolling_port = 8072
 proxy_mode = True
 EOF
 ```
+
+Ghi chú:
+- `admin_passwd` là trường mật khẩu dùng để đăng nhập vào trang database manager, hãy nhớ mật khẩu này
+- `db_host` là trường chứa tên database chủ của Odoo, đặt tên gì cũng được, miễn là khi thiết lập ở phần database manager đừng đặt trùng tên với giá trị này là được
+
 ### 3.2. Tạo file Docker-Compose
 - Khuyến nghị cài đặt PostgreSQL 16 để đảm bảo hiệu suất
 ```bash
@@ -145,6 +138,17 @@ volumes:
   odoo-web-data:
   odoo-db-data:
 EOF
+```
+### 3.3. Tạo thư mục session (quan trọng)
+- Thay đổi đối tượng và quyền truy cập của thư mục ```~/odoo-docker/odoo-web-data```
+```bash
+sudo chown -R 101:101 odoo-web-data
+sudo chmod -R 755 odoo-web-data
+```
+- Tạo thư mục session và thay đổi đối tượng truy cập
+```bash
+mkdir -p odoo-web-data/sessions
+sudo chown -R 101:101 odoo-web-data/sessions
 ```
 ## 4. Cài đặt Nginx và cấu hình Reverse Proxy để dùng trước ở giao thức HTTP
 ### 4.1. Cài đặt Nginx
